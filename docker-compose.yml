@@ -1,0 +1,17 @@
+version: '3'
+services:
+  powerplant:
+    build: .
+    ports:
+      - "8080"
+    links:
+      - db
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    restart: always
+    command: mongod --replSet rs
+    expose:
+      - "27017"

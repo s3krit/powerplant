@@ -7,3 +7,4 @@ npm-debug.log
 secrets.js
 /webpack.config.js
 /dist/bundle.js
+.python-version

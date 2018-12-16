@@ -207,8 +207,22 @@ function startServer(testMode) {
 		useNewUrlParser: true,
 	};
 	if (process.env.DATABASEURL) {
-		mongoose.connect(process.env.DATABASEURL, options);
+    // FIXME: this might be horrible. Iniate replicaSet on launch
+    if (developmentMode){
+      const MongoClient = require('mongodb').MongoClient;
+      MongoClient.connect(process.env.DATABASEURL, function(err, client) {
+        client.db('admin').command({replSetInitiate: {}}, function(err, info){
+          if (err){
+            console.log(err);
+          }
+        });
+        client.close();
+        mongoose.connect(process.env.DATABASEURL, options);
+      });
+    }
+
 	} else {
+    console.log(getDatabaseURL());
 		mongoose.connect(getDatabaseURL(), options);
 	}
 
